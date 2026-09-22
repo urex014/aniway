@@ -24,24 +24,24 @@ export default function GenreFilter({
       {onSelectGenre ? (
         <button
           onClick={() => onSelectGenre(0)}
-          className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex-shrink-0 cursor-pointer ${
+          className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all flex-shrink-0 cursor-pointer ${
             !selectedGenreId
-              ? "bg-[#7C3AED] text-white shadow-[0_0_12px_rgba(124,58,237,0.5)]"
-              : "bg-[#111116] hover:bg-[#18181F] text-[#A1A1AA] hover:text-white border border-white/10"
+              ? "bg-[#8B5CF6] text-white font-semibold"
+              : "bg-[#181818] hover:bg-[#262626] text-[#A3A3A3] hover:text-white"
           }`}
         >
-          ALL GENRES
+          All
         </button>
       ) : (
         <Link
           href={baseHref}
-          className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex-shrink-0 ${
+          className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all flex-shrink-0 ${
             !selectedGenreId
-              ? "bg-[#7C3AED] text-white shadow-[0_0_12px_rgba(124,58,237,0.5)]"
-              : "bg-[#111116] hover:bg-[#18181F] text-[#A1A1AA] hover:text-white border border-white/10"
+              ? "bg-[#8B5CF6] text-white font-semibold"
+              : "bg-[#181818] hover:bg-[#262626] text-[#A3A3A3] hover:text-white"
           }`}
         >
-          ALL GENRES
+          All
         </Link>
       )}
 
@@ -52,10 +52,10 @@ export default function GenreFilter({
             <button
               key={genre.mal_id}
               onClick={() => onSelectGenre(genre.mal_id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex-shrink-0 cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all flex-shrink-0 cursor-pointer ${
                 isSelected
-                  ? "bg-[#7C3AED] text-white shadow-[0_0_12px_rgba(124,58,237,0.5)]"
-                  : "bg-[#111116] hover:bg-[#18181F] text-[#A1A1AA] hover:text-white border border-white/10"
+                  ? "bg-[#8B5CF6] text-white font-semibold"
+                  : "bg-[#181818] hover:bg-[#262626] text-[#A3A3A3] hover:text-white"
               }`}
             >
               {genre.name}
@@ -67,10 +67,10 @@ export default function GenreFilter({
           <Link
             key={genre.mal_id}
             href={`${baseHref}?genres=${genre.mal_id}`}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex-shrink-0 ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all flex-shrink-0 ${
               isSelected
-                ? "bg-[#7C3AED] text-white shadow-[0_0_12px_rgba(124,58,237,0.5)]"
-                : "bg-[#111116] hover:bg-[#18181F] text-[#A1A1AA] hover:text-white border border-white/10"
+                ? "bg-[#8B5CF6] text-white font-semibold"
+                : "bg-[#181818] hover:bg-[#262626] text-[#A3A3A3] hover:text-white"
             }`}
           >
             {genre.name}

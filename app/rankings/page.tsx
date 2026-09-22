@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { rankingService, TopFilterParams } from "@/lib/api";
-import { Star, Trophy, Users, Heart, ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, Play } from "lucide-react";
 
 interface RankingsPageProps {
   searchParams: Promise<{
@@ -46,37 +46,33 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full min-h-screen">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 w-full min-h-screen bg-[#050505]">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-white/5">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-white/5 mb-6">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono text-[#C084FC] uppercase tracking-wider font-bold">
-            <Trophy className="w-4 h-4 text-amber-400" />
-            <span>Leaderboard Matrix // ランキング</span>
-          </div>
-          <h1 className="font-heading font-black text-2xl sm:text-3xl text-white mt-1">
-            Global Database Rankings
+          <h1 className="font-extrabold text-2xl sm:text-4xl text-white tracking-tight">
+            Top Rankings
           </h1>
-          <p className="text-xs text-[#A1A1AA] mt-1">
-            Official ranked standings derived from community scores, member engagement and telemetry.
+          <p className="text-xs sm:text-sm text-[#A3A3A3] mt-1">
+            Global streaming standings and community ratings.
           </p>
         </div>
 
-        {/* Tab Selector */}
-        <div className="flex items-center gap-1.5 p-1 bg-[#111116] rounded-xl border border-white/5">
+        {/* Tab Pills */}
+        <div className="flex items-center gap-2">
           {[
             { id: "anime", label: "Top Anime" },
             { id: "manga", label: "Top Manga" },
             { id: "characters", label: "Characters" },
-            { id: "people", label: "People / Seiyuu" },
+            { id: "people", label: "People" },
           ].map((t) => (
             <Link
               key={t.id}
               href={`/rankings?tab=${t.id}`}
-              className={`px-3 py-1.5 rounded-lg text-xs font-heading font-medium transition ${
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
                 tab === t.id
-                  ? "bg-[#7C3AED] text-white font-bold shadow-sm"
-                  : "text-[#A1A1AA] hover:text-white"
+                  ? "bg-[#8B5CF6] text-white"
+                  : "bg-[#181818] hover:bg-[#262626] text-[#A3A3A3] hover:text-white"
               }`}
             >
               {t.label}
@@ -85,19 +81,19 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
         </div>
       </div>
 
-      {/* Subfilters for Anime */}
+      {/* Subfilters */}
       {tab === "anime" && (
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-4 mb-2">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-4 mb-4">
           {animeFilters.map((f) => {
             const isActive = (filter || "") === f.value;
             return (
               <Link
                 key={f.value}
                 href={`/rankings?tab=anime${f.value ? `&filter=${f.value}` : ""}`}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition flex-shrink-0 ${
+                className={`px-3 py-1 rounded-md text-xs font-medium transition flex-shrink-0 ${
                   isActive
-                    ? "bg-[#18181F] border border-[#7C3AED] text-[#C084FC]"
-                    : "bg-[#111116] hover:bg-[#18181F] text-[#A1A1AA] hover:text-white border border-white/5"
+                    ? "bg-white text-black font-semibold"
+                    : "bg-[#181818] text-[#A3A3A3] hover:text-white"
                 }`}
               >
                 {f.label}
@@ -108,145 +104,102 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
       )}
 
       {/* Ranked List */}
-      <div className="mt-4 flex flex-col gap-3">
+      <div className="flex flex-col gap-3">
         {tab === "anime" &&
           animeList.map((anime, idx) => {
             const rankNum = anime.rank || (page - 1) * 20 + idx + 1;
+            const rankStr = String(rankNum).padStart(2, "0");
             const isTop3 = rankNum <= 3;
+            const displayTitle = anime.title_english || anime.title;
+
             return (
               <div
                 key={anime.mal_id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 sm:p-4 rounded-xl bg-[#111116] hover:bg-[#18181F] border border-white/5 hover:border-[#7C3AED]/40 transition group gap-4"
+                className="flex items-center justify-between p-3.5 rounded-md bg-[#111111] hover:bg-[#181818] transition group gap-4"
               >
-                <div className="flex items-center gap-4 min-w-0">
-                  {/* Rank Badge */}
+                <div className="flex items-center gap-4 sm:gap-6 min-w-0">
+                  {/* Oversized Netflix Rank Number */}
                   <span
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center font-heading font-black text-sm flex-shrink-0 border ${
-                      isTop3
-                        ? "bg-gradient-to-br from-amber-400/20 to-[#7C3AED]/30 border-amber-400/50 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.3)]"
-                        : "bg-[#18181F] border-white/10 text-[#A1A1AA]"
+                    className={`font-black text-2xl sm:text-3xl w-10 text-center select-none ${
+                      isTop3 ? "text-[#8B5CF6]" : "text-[#525252]"
                     }`}
                   >
-                    #{rankNum}
+                    {rankStr}
                   </span>
 
-                  {/* Thumbnail Poster */}
+                  {/* Poster */}
                   <Link
                     href={`/anime/${anime.mal_id}`}
-                    className="relative w-14 aspect-[3/4] rounded-lg overflow-hidden bg-[#18181F] flex-shrink-0"
+                    className="relative w-12 sm:w-16 aspect-[2/3] rounded overflow-hidden bg-[#181818] flex-shrink-0"
                   >
                     <Image
                       src={anime.images?.webp?.small_image_url || anime.images?.jpg?.small_image_url || "/placeholder-poster.jpg"}
                       alt={anime.title}
                       fill
-                      sizes="56px"
-                      className="object-cover group-hover:scale-105 transition"
+                      sizes="64px"
+                      className="object-cover"
                     />
                   </Link>
 
                   {/* Title & Metadata */}
-                  <div className="min-w-0 space-y-1">
+                  <div className="min-w-0">
                     <Link
                       href={`/anime/${anime.mal_id}`}
-                      className="font-heading font-bold text-sm sm:text-base text-white group-hover:text-[#22D3EE] transition line-clamp-1"
+                      className="font-bold text-sm sm:text-base text-white hover:text-[#8B5CF6] transition line-clamp-1"
                     >
-                      {anime.title_english || anime.title}
+                      {displayTitle}
                     </Link>
-                    <div className="flex items-center gap-2 text-xs text-[#A1A1AA] flex-wrap">
-                      <span className="font-mono text-white/80">{anime.type || "TV"}</span>
+                    <div className="flex items-center gap-2 text-xs text-[#A3A3A3] mt-0.5">
+                      <span>{anime.type || "TV"}</span>
                       <span>•</span>
-                      <span>{anime.episodes ? `${anime.episodes} eps` : "Ongoing"}</span>
+                      <span>{anime.episodes ? `${anime.episodes} Eps` : "Ongoing"}</span>
                       <span>•</span>
-                      <span className="text-[#22D3EE] font-mono">{anime.status}</span>
-                      {anime.members && (
-                        <>
-                          <span>•</span>
-                          <span className="flex items-center gap-1">
-                            <Users className="w-3 h-3 text-[#A1A1AA]" />
-                            {anime.members.toLocaleString()}
-                          </span>
-                        </>
-                      )}
+                      <span>{anime.status}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Score & Actions */}
-                <div className="flex items-center justify-between sm:justify-end gap-4 flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/5">
+                {/* Score & Action */}
+                <div className="flex items-center gap-4 flex-shrink-0">
                   {anime.score && (
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#18181F] border border-amber-400/30 text-amber-300 font-mono font-bold text-sm">
-                      <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                      <span>{anime.score.toFixed(2)}</span>
+                    <div className="flex items-center gap-1 text-sm font-semibold text-white">
+                      <Star className="w-3.5 h-3.5 fill-[#8B5CF6] text-[#8B5CF6]" />
+                      <span>{anime.score.toFixed(1)}</span>
                     </div>
                   )}
 
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={`/watch/${anime.mal_id}?ep=1`}
-                      className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-medium text-xs shadow-sm transition active:scale-95"
-                    >
-                      <Play className="w-3.5 h-3.5 fill-white" />
-                      Watch
-                    </Link>
-                    <Link
-                      href={`/anime/${anime.mal_id}`}
-                      className="px-3 py-1.5 rounded-lg bg-[#18181F] hover:bg-white/10 border border-white/10 text-xs text-[#A1A1AA] hover:text-white transition"
-                    >
-                      Info
-                    </Link>
-                  </div>
+                  <Link
+                    href={`/watch/${anime.mal_id}?ep=1`}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#8B5CF6] hover:bg-[#7C3AED] text-white font-semibold text-xs transition"
+                  >
+                    <Play className="w-3.5 h-3.5 fill-white" />
+                    <span>Watch</span>
+                  </Link>
                 </div>
               </div>
             );
           })}
-
-        {tab === "manga" &&
-          mangaList.map((manga, idx) => (
-            <div
-              key={manga.mal_id}
-              className="flex items-center justify-between p-4 rounded-xl bg-[#111116] border border-white/5 gap-4"
-            >
-              <div className="flex items-center gap-4 min-w-0">
-                <span className="w-8 h-8 rounded-lg bg-[#18181F] text-[#A1A1AA] flex items-center justify-center font-mono text-xs font-bold">
-                  #{(page - 1) * 20 + idx + 1}
-                </span>
-                <Link
-                  href={`/manga/${manga.mal_id}`}
-                  className="font-heading font-bold text-sm text-white hover:text-[#22D3EE] transition"
-                >
-                  {manga.title_english || manga.title}
-                </Link>
-              </div>
-              {manga.score && (
-                <span className="font-mono text-xs font-bold text-amber-300">
-                  ★ {manga.score.toFixed(2)}
-                </span>
-              )}
-            </div>
-          ))}
       </div>
 
       {/* Pagination */}
       <div className="flex items-center justify-center gap-4 mt-12 pt-6 border-t border-white/5">
         <Link
           href={`/rankings?${new URLSearchParams({ ...resolvedParams, page: String(Math.max(1, page - 1)) }).toString()}`}
-          className={`flex items-center gap-1 px-4 py-2 rounded-xl border text-xs font-mono font-medium transition ${
-            page <= 1
-              ? "opacity-30 pointer-events-none bg-[#111116] border-white/5 text-[#A1A1AA]"
-              : "bg-[#111116] hover:bg-[#18181F] border-white/10 text-white"
+          className={`flex items-center gap-1 px-4 py-2 rounded-md text-xs font-medium transition ${
+            page <= 1 ? "opacity-30 pointer-events-none bg-[#111111] text-[#A3A3A3]" : "bg-[#181818] hover:bg-[#262626] text-white"
           }`}
         >
           <ChevronLeft className="w-4 h-4" />
-          PREVIOUS
+          Previous
         </Link>
-        <span className="text-xs font-mono font-bold text-[#C084FC] px-3 py-1 rounded-lg bg-[#18181F] border border-white/10">
-          PAGE {page}
+        <span className="text-xs text-[#A3A3A3] px-3 py-1">
+          Page {page}
         </span>
         <Link
           href={`/rankings?${new URLSearchParams({ ...resolvedParams, page: String(page + 1) }).toString()}`}
-          className="flex items-center gap-1 px-4 py-2 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white border-transparent text-xs font-mono font-medium transition shadow-sm"
+          className="flex items-center gap-1 px-4 py-2 rounded-md bg-[#8B5CF6] hover:bg-[#7C3AED] text-white text-xs font-semibold transition"
         >
-          NEXT
+          Next
           <ChevronRight className="w-4 h-4" />
         </Link>
       </div>

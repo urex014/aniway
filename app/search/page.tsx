@@ -12,7 +12,6 @@ import {
   characterService,
   peopleService,
 } from "@/lib/api";
-import { Search, Film, BookOpen, User, Users } from "lucide-react";
 
 interface SearchPageProps {
   searchParams: Promise<{
@@ -48,61 +47,45 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
 
   const tabs = [
-    { id: "anime", label: "Anime", icon: Film },
-    { id: "manga", label: "Manga", icon: BookOpen },
-    { id: "characters", label: "Characters", icon: User },
-    { id: "people", label: "People / Seiyuu", icon: Users },
+    { id: "anime", label: "Anime" },
+    { id: "manga", label: "Manga" },
+    { id: "characters", label: "Characters" },
+    { id: "people", label: "People" },
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full min-h-screen">
-      {/* Search Header */}
-      <div className="max-w-3xl mx-auto text-center space-y-3 mb-8">
-        <div className="flex items-center justify-center gap-2 text-xs font-mono text-[#22D3EE] uppercase tracking-wider font-bold">
-          <Search className="w-4 h-4 text-[#22D3EE]" />
-          <span>Universal Telemetry Radar // 全体検索</span>
-        </div>
-        <h1 className="font-heading font-black text-2xl sm:text-4xl text-white">
-          Search the Cyber Database
-        </h1>
-        <p className="text-xs sm:text-sm text-[#A1A1AA]">
-          Query indexed titles, literary works, characters, and voice talent across Jikan v4.
-        </p>
-
-        {/* Global Search Bar */}
-        <div className="pt-2">
-          <SearchBar initialQuery={q} />
-        </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 w-full min-h-screen bg-[#050505]">
+      {/* Prominent Search Input */}
+      <div className="max-w-2xl mx-auto mb-8 space-y-3">
+        <SearchBar initialQuery={q} />
       </div>
 
       {/* Tabs */}
       {q && (
-        <div className="flex items-center justify-center gap-2 border-b border-white/5 pb-4 mb-8 overflow-x-auto no-scrollbar">
+        <div className="flex items-center justify-center gap-2 mb-8">
           {tabs.map((tab) => {
-            const Icon = tab.icon;
             const isActive = currentTab === tab.id;
             return (
               <Link
                 key={tab.id}
                 href={`/search?q=${encodeURIComponent(q)}&type=${tab.id}`}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-heading font-medium transition flex-shrink-0 ${
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
                   isActive
-                    ? "bg-[#7C3AED] text-white font-bold shadow-[0_0_15px_rgba(124,58,237,0.4)]"
-                    : "bg-[#111116] hover:bg-[#18181F] text-[#A1A1AA] hover:text-white border border-white/5"
+                    ? "bg-[#8B5CF6] text-white"
+                    : "bg-[#181818] hover:bg-[#262626] text-[#A3A3A3] hover:text-white"
                 }`}
               >
-                <Icon className="w-4 h-4" />
-                <span>{tab.label}</span>
+                {tab.label}
               </Link>
             );
           })}
         </div>
       )}
 
-      {/* Results Rendering */}
+      {/* Results Grid */}
       {!q.trim() ? (
-        <div className="text-center py-16 text-[#A1A1AA] space-y-2">
-          <p className="text-sm">Enter a search keyword above to query the Jikan v4 archives.</p>
+        <div className="text-center py-20 text-[#A3A3A3]">
+          <p className="text-sm">Search for your favorite anime, manga, characters, or voice actors.</p>
         </div>
       ) : currentTab === "anime" ? (
         animeResults.length > 0 ? (
@@ -113,8 +96,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           </div>
         ) : (
           <EmptyState
-            title="No Anime Signals Found"
-            description={`No anime matched the search query "${q}".`}
+            title={`No results for "${q}"`}
+            description="Explore our anime catalog or try searching for another title."
           />
         )
       ) : currentTab === "manga" ? (
@@ -125,36 +108,27 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             ))}
           </div>
         ) : (
-          <EmptyState
-            title="No Manga Signals Found"
-            description={`No manga records matched "${q}".`}
-          />
+          <EmptyState title={`No manga results for "${q}"`} />
         )
       ) : currentTab === "characters" ? (
         characterResults.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
             {characterResults.map((item) => (
               <CharacterCard key={item.mal_id} character={item} />
             ))}
           </div>
         ) : (
-          <EmptyState
-            title="No Characters Located"
-            description={`No character records matched "${q}".`}
-          />
+          <EmptyState title={`No character results for "${q}"`} />
         )
       ) : currentTab === "people" ? (
         peopleResults.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
             {peopleResults.map((item) => (
               <PersonCard key={item.mal_id} person={item} />
             ))}
           </div>
         ) : (
-          <EmptyState
-            title="No Voice Actors Located"
-            description={`No personnel matched "${q}".`}
-          />
+          <EmptyState title={`No people results for "${q}"`} />
         )
       ) : null}
     </div>

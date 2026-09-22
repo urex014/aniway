@@ -1,19 +1,18 @@
 import React from "react";
 import Hero from "@/components/anime/Hero";
 import AnimeRow from "@/components/anime/AnimeRow";
+import TrendingSection from "@/components/anime/TrendingSection";
 import ContinueWatching from "@/components/anime/ContinueWatching";
 import GenreFilter from "@/components/search/GenreFilter";
 import {
   rankingService,
   seasonService,
   genreService,
-  recommendationService,
 } from "@/lib/api";
 
-export const revalidate = 300; // 5 minute revalidation
+export const revalidate = 300;
 
 export default async function HomePage() {
-  // Fetch primary real data from services
   const [
     popularRes,
     topRatedRes,
@@ -21,10 +20,10 @@ export default async function HomePage() {
     upcomingRes,
     genresRes,
   ] = await Promise.all([
-    rankingService.getTopAnime({ filter: "bypopularity", limit: 10 }),
-    rankingService.getTopAnime({ limit: 10 }),
-    seasonService.getSeasonNow({ limit: 10 }),
-    seasonService.getSeasonUpcoming({ limit: 10 }),
+    rankingService.getTopAnime({ filter: "bypopularity", limit: 12 }),
+    rankingService.getTopAnime({ limit: 12 }),
+    seasonService.getSeasonNow({ limit: 12 }),
+    seasonService.getSeasonUpcoming({ limit: 12 }),
     genreService.getAnimeGenres(),
   ]);
 
@@ -34,58 +33,54 @@ export default async function HomePage() {
   const upcomingAnime = upcomingRes.data || [];
   const genres = genresRes.data || [];
 
-  // Use top 5 popular anime for hero slider
   const heroItems = popularAnime.slice(0, 5);
 
   return (
-    <div className="w-full flex flex-col min-h-screen">
-      {/* 1. Cinematic Hero Section */}
+    <div className="w-full flex flex-col min-h-screen bg-[#050505]">
+      {/* 1. Cinematic Hero */}
       <Hero featuredAnime={heroItems} />
 
-      {/* 2. Continue Watching (Locally Persisted) */}
+      {/* 2. Continue Watching */}
       <ContinueWatching />
 
-      {/* 3. Genres Quick Bar */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4 mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-mono text-[#A1A1AA] uppercase tracking-wider font-bold">
-            Sector Matrix // ジャンル
-          </span>
-        </div>
-        <GenreFilter genres={genres.slice(0, 15)} />
-      </section>
+      {/* 3. Netflix Top 10 Today */}
+      <TrendingSection animeList={popularAnime} />
 
       {/* 4. Trending Now */}
       <AnimeRow
         title="Trending Now"
-        subtitleJapanese="今話題の作品"
         animeList={popularAnime}
         viewAllHref="/rankings?filter=bypopularity"
       />
 
-      {/* 5. Currently Airing Seasons */}
+      {/* 5. Currently Airing */}
       <AnimeRow
         title="Currently Airing"
-        subtitleJapanese="放送中アニメ"
         animeList={airingAnime}
         viewAllHref="/seasons"
       />
 
-      {/* 6. Top Rated of All Time */}
+      {/* 6. Popular Anime */}
       <AnimeRow
-        title="Top Rated All-Time"
-        subtitleJapanese="歴代最高評価"
+        title="Top Rated Anime"
         animeList={topRatedAnime}
         viewAllHref="/rankings"
       />
 
-      {/* 7. Upcoming Season */}
+      {/* 7. Upcoming Anime */}
       <AnimeRow
-        title="Anticipated & Upcoming"
-        subtitleJapanese="近日公開"
+        title="Coming Soon to Aniway"
         animeList={upcomingAnime}
         viewAllHref="/seasons?tab=upcoming"
       />
+
+      {/* 8. Genres Quick Browsing */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-6 mb-8">
+        <h3 className="font-bold text-base text-white mb-3">
+          Explore by Category
+        </h3>
+        <GenreFilter genres={genres.slice(0, 14)} />
+      </section>
     </div>
   );
 }

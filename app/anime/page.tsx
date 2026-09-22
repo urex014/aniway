@@ -4,7 +4,7 @@ import AnimeCard from "@/components/anime/AnimeCard";
 import GenreFilter from "@/components/search/GenreFilter";
 import { animeService, genreService } from "@/lib/api";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface AnimeExploreProps {
   searchParams: Promise<{
@@ -45,44 +45,33 @@ export default async function AnimeExplorePage({ searchParams }: AnimeExplorePro
   const genreList = genresRes.data || [];
 
   const types = ["tv", "movie", "ova", "ona", "special"];
-  const statuses = ["airing", "complete", "upcoming"];
-  const sortOptions = [
-    { label: "Top Score", value: "score" },
-    { label: "Most Popular", value: "popularity" },
-    { label: "Members", value: "members" },
-    { label: "Title", value: "title" },
-  ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full min-h-screen">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 w-full min-h-screen bg-[#050505]">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-white/5">
         <div>
-          <span className="text-xs font-mono text-[#22D3EE] uppercase tracking-wider font-bold">
-            Sector Catalog // アニメ探索
-          </span>
-          <h1 className="font-heading font-black text-2xl sm:text-3xl text-white mt-1">
-            Explore Anime Database
+          <h1 className="font-extrabold text-2xl sm:text-3xl text-white tracking-tight">
+            Anime Catalog
           </h1>
-          <p className="text-xs text-[#A1A1AA] mt-1">
-            Browse and filter through certified real-time anime telemetry records.
+          <p className="text-xs text-[#A3A3A3] mt-1">
+            Browse full-length TV series, theatrical films, and original net animations.
           </p>
         </div>
 
-        {/* Filter Badges Container */}
-        <div className="flex items-center gap-2 flex-wrap text-xs font-mono">
-          <SlidersHorizontal className="w-4 h-4 text-[#7C3AED]" />
-          <span className="text-[#A1A1AA]">FILTERS:</span>
+        {/* Filter Badges */}
+        <div className="flex items-center gap-2 flex-wrap text-xs">
+          <span className="text-[#A3A3A3]">Type:</span>
           {types.map((t) => {
             const isActive = type === t;
             return (
               <Link
                 key={t}
                 href={`/anime?${new URLSearchParams({ ...resolvedParams, type: isActive ? "" : t, page: "1" }).toString()}`}
-                className={`px-2.5 py-1 rounded-lg uppercase transition ${
+                className={`px-3 py-1 rounded-full uppercase transition text-[11px] font-medium ${
                   isActive
-                    ? "bg-[#7C3AED] text-white font-bold"
-                    : "bg-[#111116] hover:bg-[#18181F] text-[#A1A1AA] hover:text-white border border-white/5"
+                    ? "bg-[#8B5CF6] text-white font-semibold"
+                    : "bg-[#181818] hover:bg-[#262626] text-[#A3A3A3] hover:text-white"
                 }`}
               >
                 {t}
@@ -101,7 +90,7 @@ export default async function AnimeExplorePage({ searchParams }: AnimeExplorePro
         />
       </div>
 
-      {/* Grid of Results */}
+      {/* Grid */}
       {animeList.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 mt-6">
           {animeList.map((anime) => (
@@ -110,40 +99,40 @@ export default async function AnimeExplorePage({ searchParams }: AnimeExplorePro
         </div>
       ) : (
         <EmptyState
-          title="No Telemetry Signals Found"
-          description="Adjust your search filters or selected genre to locate matching anime signals."
-          actionText="Reset All Filters"
+          title="No Anime Located"
+          description="Try selecting a different genre or reset your filters."
+          actionText="Reset Filters"
           actionHref="/anime"
         />
       )}
 
-      {/* Pagination Controls */}
+      {/* Pagination */}
       <div className="flex items-center justify-center gap-4 mt-12 pt-6 border-t border-white/5">
         <Link
           href={`/anime?${new URLSearchParams({ ...resolvedParams, page: String(Math.max(1, page - 1)) }).toString()}`}
-          className={`flex items-center gap-1 px-4 py-2 rounded-xl border text-xs font-mono font-medium transition ${
+          className={`flex items-center gap-1 px-4 py-2 rounded-md text-xs font-medium transition ${
             page <= 1
-              ? "opacity-30 pointer-events-none bg-[#111116] border-white/5 text-[#A1A1AA]"
-              : "bg-[#111116] hover:bg-[#18181F] border-white/10 text-white"
+              ? "opacity-30 pointer-events-none bg-[#111111] text-[#A3A3A3]"
+              : "bg-[#181818] hover:bg-[#262626] text-white"
           }`}
         >
           <ChevronLeft className="w-4 h-4" />
-          PREVIOUS
+          Previous
         </Link>
 
-        <span className="text-xs font-mono font-bold text-[#C084FC] px-3 py-1 rounded-lg bg-[#18181F] border border-white/10">
-          PAGE {page} {pagination?.last_visible_page ? `/ ${pagination.last_visible_page}` : ""}
+        <span className="text-xs text-[#A3A3A3] px-3 py-1">
+          Page {page} {pagination?.last_visible_page ? `of ${pagination.last_visible_page}` : ""}
         </span>
 
         <Link
           href={`/anime?${new URLSearchParams({ ...resolvedParams, page: String(page + 1) }).toString()}`}
-          className={`flex items-center gap-1 px-4 py-2 rounded-xl border text-xs font-mono font-medium transition ${
+          className={`flex items-center gap-1 px-4 py-2 rounded-md text-xs font-semibold transition ${
             pagination && !pagination.has_next_page
-              ? "opacity-30 pointer-events-none bg-[#111116] border-white/5 text-[#A1A1AA]"
-              : "bg-[#7C3AED] hover:bg-[#6D28D9] text-white border-transparent shadow-sm"
+              ? "opacity-30 pointer-events-none bg-[#111111] text-[#A3A3A3]"
+              : "bg-[#8B5CF6] hover:bg-[#7C3AED] text-white"
           }`}
         >
-          NEXT
+          Next
           <ChevronRight className="w-4 h-4" />
         </Link>
       </div>

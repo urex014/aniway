@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MobileNav from "@/components/layout/MobileNav";
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 const inter = Inter({
   variable: "--font-inter",
@@ -18,9 +12,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ANIWAY // アニウェイ — Next-Gen Anime Streaming & Database",
+  title: "ANIWAY — Stream Anime Online",
   description:
-    "Cyberpunk-infused modern anime streaming platform and media encyclopedia powered by real-time Jikan data.",
+    "Premium anime streaming destination powered by real-time Jikan data. Watch trending, top-rated, and seasonal anime.",
 };
 
 export default function RootLayout({
@@ -29,13 +23,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${spaceGrotesk.variable} ${inter.variable} dark`}
-    >
-      <body className="min-h-screen flex flex-col bg-[#09090B] text-[#F5F5F5] antialiased selection:bg-[#7C3AED] selection:text-white">
+    <html lang="en" className={`${inter.variable} dark`}>
+      <body className="min-h-screen flex flex-col bg-[#050505] text-[#FFFFFF] antialiased selection:bg-[#8B5CF6] selection:text-white">
         <Navbar />
-        <main className="flex-1 pb-20 md:pb-12">{children}</main>
+        <main className="flex-1 pb-16 md:pb-12">{children}</main>
         <Footer />
         <MobileNav />
       </body>

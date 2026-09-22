@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Play, Bookmark, Check, Star, Info, Volume2, VolumeX } from "lucide-react";
+import { Play, Plus, Check, Info, Star } from "lucide-react";
 import { Anime } from "@/lib/api";
 import { isAnimeInWatchlist, toggleWatchlistId } from "@/lib/storage";
 
@@ -14,25 +14,23 @@ interface HeroProps {
 export default function Hero({ featuredAnime }: HeroProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [inWatchlist, setInWatchlist] = useState(false);
-  const [showTrailer, setShowTrailer] = useState(false);
 
   const currentAnime = featuredAnime[currentIndex] || featuredAnime[0];
 
   useEffect(() => {
     if (currentAnime) {
       setInWatchlist(isAnimeInWatchlist(currentAnime.mal_id));
-      setShowTrailer(false);
     }
   }, [currentAnime]);
 
-  // Auto-advance hero carousel every 8 seconds if trailer isn't playing
+  // Subtle auto-advance every 9 seconds
   useEffect(() => {
-    if (featuredAnime.length <= 1 || showTrailer) return;
-    const interval = setInterval(() => {
+    if (featuredAnime.length <= 1) return;
+    const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % featuredAnime.length);
-    }, 8000);
-    return () => clearInterval(interval);
-  }, [featuredAnime.length, showTrailer]);
+    }, 9000);
+    return () => clearInterval(timer);
+  }, [featuredAnime.length]);
 
   if (!currentAnime) return null;
 
@@ -47,159 +45,116 @@ export default function Hero({ featuredAnime }: HeroProps) {
     currentAnime.images?.jpg?.large_image_url ||
     "/placeholder-hero.jpg";
 
-  const trailerEmbed = currentAnime.trailer?.embed_url;
-
   return (
-    <div className="relative w-full h-[72vh] min-h-[520px] max-h-[760px] bg-[#09090B] overflow-hidden border-b border-white/5">
-      {/* Background Media */}
-      {showTrailer && trailerEmbed ? (
-        <div className="absolute inset-0 z-0">
-          <iframe
-            src={`${trailerEmbed}&autoplay=1&mute=1`}
-            title={displayTitle}
-            className="w-full h-full object-cover scale-125 pointer-events-none"
-            allow="autoplay; encrypted-media"
-          />
-        </div>
-      ) : (
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={bannerImage}
-            alt={displayTitle}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center filter brightness-[0.75] contrast-[1.08] transition-all duration-700 ease-in-out"
-          />
-        </div>
-      )}
+    <div className="relative w-full h-[85vh] min-h-[580px] max-h-[850px] bg-[#050505] overflow-hidden">
+      {/* Background Anime Artwork */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src={bannerImage}
+          alt={displayTitle}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center filter brightness-[0.7] contrast-[1.05] transition-all duration-1000 ease-in-out"
+        />
+      </div>
 
-      {/* Cyberpunk Vignette & Overlays */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#09090B] via-[#09090B]/85 to-transparent" />
-      <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#09090B] via-transparent to-black/50" />
-      <div className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#7C3AED]/20 via-transparent to-transparent pointer-events-none" />
+      {/* Netflix Left-to-Right and Bottom Vignettes */}
+      <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#050505] via-[#050505]/75 to-transparent w-full md:w-3/4" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-transparent to-black/30" />
 
-      {/* Hero Content Container */}
-      <div className="relative z-20 max-w-7xl mx-auto h-full flex flex-col justify-end pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8">
+      {/* Hero Content */}
+      <div className="relative z-20 max-w-7xl mx-auto h-full flex flex-col justify-end pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl space-y-4">
-          {/* Metadata Badges */}
-          <div className="flex items-center flex-wrap gap-2 text-xs font-mono">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#7C3AED] text-white font-bold tracking-wider shadow-[0_0_12px_rgba(124,58,237,0.6)]">
-              FEATURED // 注目
-            </span>
-            {currentAnime.type && (
-              <span className="px-2 py-0.5 rounded bg-white/10 text-white font-semibold backdrop-blur-md">
-                {currentAnime.type}
-              </span>
-            )}
+          {/* Metadata Row */}
+          <div className="flex items-center gap-3 text-xs text-[#A3A3A3] font-medium">
             {currentAnime.score && (
-              <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold">
-                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                <span>{currentAnime.score.toFixed(1)}</span>
-              </div>
-            )}
-            {currentAnime.episodes && (
-              <span className="px-2 py-0.5 rounded bg-white/10 text-[#A1A1AA]">
-                {currentAnime.episodes} EPISODES
+              <span className="flex items-center gap-1 text-white font-bold">
+                <Star className="w-3.5 h-3.5 fill-[#8B5CF6] text-[#8B5CF6]" />
+                {currentAnime.score.toFixed(1)} Rating
               </span>
             )}
+            <span>•</span>
+            <span>{currentAnime.year || (currentAnime.aired?.prop?.from?.year ?? "Series")}</span>
+            <span>•</span>
+            <span>{currentAnime.episodes ? `${currentAnime.episodes} Episodes` : "Ongoing"}</span>
             {currentAnime.rating && (
-              <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[#A1A1AA] text-[10px]">
-                {currentAnime.rating.split(" ")[0]}
-              </span>
+              <>
+                <span>•</span>
+                <span className="px-1.5 py-0.2 rounded border border-white/20 text-[10px] text-white">
+                  {currentAnime.rating.split(" ")[0]}
+                </span>
+              </>
             )}
           </div>
 
-          {/* Titles */}
-          <div className="space-y-1">
-            {currentAnime.title_japanese && (
-              <p className="text-xs sm:text-sm font-mono text-[#22D3EE] tracking-wide">
-                {currentAnime.title_japanese}
-              </p>
-            )}
-            <h1 className="font-heading font-black text-2xl sm:text-4xl md:text-5xl text-white tracking-tight leading-tight line-clamp-2 drop-shadow-md">
-              {displayTitle}
-            </h1>
-          </div>
+          {/* Title */}
+          <h1 className="font-extrabold text-3xl sm:text-5xl md:text-6xl text-white tracking-tight leading-tight line-clamp-2 drop-shadow-lg">
+            {displayTitle}
+          </h1>
 
-          {/* Synopsis */}
+          {/* Short Synopsis */}
           {currentAnime.synopsis && (
-            <p className="text-xs sm:text-sm text-[#A1A1AA] line-clamp-3 leading-relaxed max-w-xl">
+            <p className="text-xs sm:text-sm text-[#A3A3A3] line-clamp-3 leading-relaxed max-w-xl">
               {currentAnime.synopsis}
             </p>
           )}
 
-          {/* Genres Chips */}
+          {/* Genres (clean inline format) */}
           {currentAnime.genres && currentAnime.genres.length > 0 && (
-            <div className="flex items-center gap-2 flex-wrap pt-1">
-              {currentAnime.genres.slice(0, 4).map((g) => (
-                <span
-                  key={g.mal_id}
-                  className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-[#18181F]/80 border border-white/10 text-white/90"
-                >
-                  {g.name}
-                </span>
+            <div className="flex items-center gap-2 text-xs text-white/70 pt-1">
+              {currentAnime.genres.slice(0, 3).map((g, idx) => (
+                <React.Fragment key={g.mal_id}>
+                  <span>{g.name}</span>
+                  {idx < Math.min(2, currentAnime.genres.length - 1) && (
+                    <span className="text-white/30">•</span>
+                  )}
+                </React.Fragment>
               ))}
             </div>
           )}
 
-          {/* Action CTAs */}
-          <div className="flex items-center gap-3 pt-3 flex-wrap">
+          {/* Netflix Style Buttons */}
+          <div className="flex items-center gap-3 pt-3">
             <Link
               href={`/watch/${currentAnime.mal_id}?ep=1`}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#7C3AED] to-[#9333EA] hover:from-[#6D28D9] hover:to-[#7E22CE] text-white font-heading font-bold text-sm tracking-wide shadow-[0_0_25px_rgba(124,58,237,0.5)] transition-all duration-200 active:scale-95 cursor-pointer"
+              className="flex items-center gap-2 px-7 py-3 rounded-md bg-[#8B5CF6] hover:bg-[#7C3AED] text-white font-semibold text-sm transition-all duration-200 shadow-md active:scale-95 cursor-pointer"
             >
               <Play className="w-4 h-4 fill-white" />
-              WATCH NOW
+              Watch Now
             </Link>
 
             <button
               onClick={handleWatchlist}
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl backdrop-blur-md border text-sm font-medium transition-all active:scale-95 cursor-pointer ${
-                inWatchlist
-                  ? "bg-[#7C3AED]/20 border-[#C084FC] text-[#C084FC]"
-                  : "bg-[#18181F]/80 hover:bg-[#1f1f2a] border-white/15 text-white"
-              }`}
+              className="flex items-center gap-2 px-6 py-3 rounded-md bg-[#181818]/90 hover:bg-[#262626] border border-white/15 text-white font-medium text-sm transition-all duration-200 active:scale-95 cursor-pointer"
             >
-              {inWatchlist ? <Check className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
-              {inWatchlist ? "IN WATCHLIST" : "ADD TO WATCHLIST"}
+              {inWatchlist ? <Check className="w-4 h-4 text-[#8B5CF6]" /> : <Plus className="w-4 h-4" />}
+              <span>{inWatchlist ? "In My List" : "My List"}</span>
             </button>
 
             <Link
               href={`/anime/${currentAnime.mal_id}`}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-medium text-[#A1A1AA] hover:text-white transition"
+              className="flex items-center gap-2 px-4 py-3 rounded-md bg-[#111111]/70 hover:bg-[#181818] border border-white/10 text-xs text-[#A3A3A3] hover:text-white transition"
+              title="More Info"
             >
               <Info className="w-4 h-4" />
-              DETAILS
+              More Info
             </Link>
-
-            {trailerEmbed && (
-              <button
-                onClick={() => setShowTrailer(!showTrailer)}
-                className="p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[#22D3EE] transition"
-                title={showTrailer ? "Stop Trailer" : "Preview Trailer"}
-              >
-                {showTrailer ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-              </button>
-            )}
           </div>
         </div>
 
-        {/* Carousel Pagination Dots */}
+        {/* Carousel indicators */}
         {featuredAnime.length > 1 && (
-          <div className="flex items-center gap-2 pt-6">
+          <div className="flex items-center gap-2 pt-8">
             {featuredAnime.map((item, idx) => (
               <button
                 key={item.mal_id}
-                onClick={() => {
-                  setCurrentIndex(idx);
-                  setShowTrailer(false);
-                }}
+                onClick={() => setCurrentIndex(idx)}
                 aria-label={`Slide to ${item.title}`}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
+                className={`h-1 rounded-full transition-all duration-300 ${
                   currentIndex === idx
-                    ? "w-8 bg-gradient-to-r from-[#7C3AED] to-[#22D3EE] shadow-[0_0_8px_#22D3EE]"
-                    : "w-2 bg-white/20 hover:bg-white/40"
+                    ? "w-8 bg-[#8B5CF6]"
+                    : "w-3 bg-white/20 hover:bg-white/40"
                 }`}
               />
             ))}

@@ -6,13 +6,13 @@ import AnimeCard from "@/components/anime/AnimeCard";
 import { animeService, Anime } from "@/lib/api";
 import { getWatchlistIds, getContinueWatchingList, WatchProgressItem } from "@/lib/storage";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { Bookmark, Clock, Trash2, Play } from "lucide-react";
+import { Play, Clock } from "lucide-react";
 import Image from "next/image";
 
-export default function WatchlistPage() {
-  const [activeTab, setActiveTab] = useState<"watchlist" | "history">("watchlist");
-  const [watchlistAnime, setWatchlistAnime] = useState<Anime[]>([]);
-  const [historyItems, setHistoryItems] = useState<WatchProgressItem[]>([]);
+export default function MyListPage() {
+  const [activeTab, setActiveTab] = useState<"mylist" | "continue">("mylist");
+  const [savedAnime, setSavedAnime] = useState<Anime[]>([]);
+  const [continueList, setContinueList] = useState<WatchProgressItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,21 +21,21 @@ export default function WatchlistPage() {
     const loadData = async () => {
       setLoading(true);
       const ids = getWatchlistIds();
-      const history = getContinueWatchingList();
-      if (isMounted) setHistoryItems(history);
+      const progress = getContinueWatchingList();
+      if (isMounted) setContinueList(progress);
 
       if (ids.length > 0) {
         try {
           const promises = ids.slice(0, 30).map((id) => animeService.getAnimeById(id));
           const responses = await Promise.all(promises);
           if (isMounted) {
-            setWatchlistAnime(responses.map((r) => r.data).filter(Boolean));
+            setSavedAnime(responses.map((r) => r.data).filter(Boolean));
           }
         } catch {
           // Handled
         }
       } else {
-        if (isMounted) setWatchlistAnime([]);
+        if (isMounted) setSavedAnime([]);
       }
       if (isMounted) setLoading(false);
     };
@@ -51,43 +51,39 @@ export default function WatchlistPage() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full min-h-screen">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 w-full min-h-screen bg-[#050505]">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-white/5 mb-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-white/5 mb-8">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono text-[#7C3AED] uppercase tracking-wider font-bold">
-            <Bookmark className="w-4 h-4 text-[#C084FC]" />
-            <span>Personal Matrix Storage // 保存リスト</span>
-          </div>
-          <h1 className="font-heading font-black text-2xl sm:text-3xl text-white mt-1">
-            Personal Watchlist & History
+          <h1 className="font-extrabold text-2xl sm:text-4xl text-white tracking-tight">
+            My List
           </h1>
-          <p className="text-xs text-[#A1A1AA] mt-1">
-            Stored locally in your secure browser cache. Real-time telemetry is automatically synchronized.
+          <p className="text-xs sm:text-sm text-[#A3A3A3] mt-1">
+            Personal titles saved to your library and ongoing viewing progress.
           </p>
         </div>
 
-        {/* Tab Buttons */}
-        <div className="flex items-center gap-1.5 p-1 bg-[#111116] rounded-xl border border-white/5">
+        {/* Tab Selection */}
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => setActiveTab("watchlist")}
-            className={`px-4 py-1.5 rounded-lg text-xs font-heading font-medium transition cursor-pointer ${
-              activeTab === "watchlist"
-                ? "bg-[#7C3AED] text-white font-bold"
-                : "text-[#A1A1AA] hover:text-white"
+            onClick={() => setActiveTab("mylist")}
+            className={`px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer ${
+              activeTab === "mylist"
+                ? "bg-[#8B5CF6] text-white"
+                : "bg-[#181818] hover:bg-[#262626] text-[#A3A3A3] hover:text-white"
             }`}
           >
-            Watchlist ({watchlistAnime.length})
+            Saved Titles ({savedAnime.length})
           </button>
           <button
-            onClick={() => setActiveTab("history")}
-            className={`px-4 py-1.5 rounded-lg text-xs font-heading font-medium transition cursor-pointer ${
-              activeTab === "history"
-                ? "bg-[#7C3AED] text-white font-bold"
-                : "text-[#A1A1AA] hover:text-white"
+            onClick={() => setActiveTab("continue")}
+            className={`px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer ${
+              activeTab === "continue"
+                ? "bg-[#8B5CF6] text-white"
+                : "bg-[#181818] hover:bg-[#262626] text-[#A3A3A3] hover:text-white"
             }`}
           >
-            Playback History ({historyItems.length})
+            Continue Watching ({continueList.length})
           </button>
         </div>
       </div>
@@ -95,71 +91,69 @@ export default function WatchlistPage() {
       {loading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="aspect-[3/4.2] bg-[#111116] rounded-xl animate-pulse" />
+            <div key={i} className="aspect-[2/3] bg-[#111111] rounded-md animate-pulse" />
           ))}
         </div>
-      ) : activeTab === "watchlist" ? (
-        watchlistAnime.length > 0 ? (
+      ) : activeTab === "mylist" ? (
+        savedAnime.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
-            {watchlistAnime.map((anime) => (
+            {savedAnime.map((anime) => (
               <AnimeCard key={anime.mal_id} anime={anime} />
             ))}
           </div>
         ) : (
           <EmptyState
-            title="Watchlist is Empty"
-            description="Explore the catalog and bookmark titles you want to stream later."
-            actionText="Discover Anime"
+            title="You haven't added any titles to your list yet."
+            description="Explore our catalog and click the '+' button on any anime to add it here."
+            actionText="Find Titles to Add"
             actionHref="/anime"
           />
         )
       ) : (
-        historyItems.length > 0 ? (
+        continueList.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {historyItems.map((item) => {
-              const percent = item.durationSeconds > 0
-                ? Math.min(100, Math.round((item.progressSeconds / item.durationSeconds) * 100))
-                : 10;
+            {continueList.map((item) => {
+              const percent =
+                item.durationSeconds > 0
+                  ? Math.min(100, Math.round((item.progressSeconds / item.durationSeconds) * 100))
+                  : 15;
               return (
                 <div
                   key={`${item.animeId}-${item.episode}`}
-                  className="flex items-center gap-3.5 p-3.5 rounded-xl bg-[#111116] border border-white/5 hover:border-[#7C3AED]/40 transition group"
+                  className="flex items-center gap-3.5 p-3 rounded-md bg-[#111111] hover:bg-[#181818] transition group"
                 >
-                  <div className="relative w-16 aspect-[3/4] rounded-lg overflow-hidden bg-[#18181F] flex-shrink-0">
+                  <div className="relative w-20 aspect-video rounded overflow-hidden bg-[#181818] flex-shrink-0">
                     {item.posterUrl ? (
                       <Image
                         src={item.posterUrl}
                         alt={item.animeTitle}
                         fill
-                        sizes="64px"
+                        sizes="80px"
                         className="object-cover"
                       />
                     ) : (
-                      <Clock className="w-6 h-6 text-[#A1A1AA] m-auto" />
+                      <Clock className="w-5 h-5 text-[#A3A3A3] m-auto" />
                     )}
                   </div>
 
                   <div className="min-w-0 flex-1 space-y-1">
-                    <h4 className="font-heading font-semibold text-xs sm:text-sm text-white truncate">
+                    <h4 className="font-semibold text-xs sm:text-sm text-white truncate">
                       {item.animeTitle}
                     </h4>
-                    <p className="text-[11px] text-[#22D3EE] font-mono">
+                    <p className="text-xs text-[#A3A3A3]">
                       Episode {item.episode}
                     </p>
-                    <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden mt-1.5">
-                      <div
-                        className="bg-[#7C3AED] h-full"
-                        style={{ width: `${percent}%` }}
-                      />
+                    <div className="w-full bg-white/20 h-1 rounded-full overflow-hidden mt-1">
+                      <div className="bg-[#8B5CF6] h-full" style={{ width: `${percent}%` }} />
                     </div>
                   </div>
 
                   <Link
                     href={`/watch/${item.animeId}?ep=${item.episode}`}
-                    className="p-2.5 rounded-lg bg-[#7C3AED] hover:bg-[#6D28D9] text-white transition flex-shrink-0"
-                    title="Resume playback"
+                    className="p-2.5 rounded-full bg-[#8B5CF6] hover:bg-[#7C3AED] text-white transition flex-shrink-0"
+                    title="Resume"
                   >
-                    <Play className="w-3.5 h-3.5 fill-white" />
+                    <Play className="w-3.5 h-3.5 fill-white ml-0.5" />
                   </Link>
                 </div>
               );
@@ -167,8 +161,8 @@ export default function WatchlistPage() {
           </div>
         ) : (
           <EmptyState
-            title="No Playback History"
-            description="Start watching episodes to track your streaming timeline."
+            title="No Viewing History"
+            description="Episodes you stream will appear here so you can pick up where you left off."
             actionText="Start Watching"
             actionHref="/"
           />
