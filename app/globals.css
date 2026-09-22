@@ -1,26 +1,82 @@
 @import "tailwindcss";
 
+@theme {
+  --color-bg-primary: #09090B;
+  --color-surface-secondary: #111116;
+  --color-surface-elevated: #18181F;
+  --color-surface-card: rgba(24, 24, 31, 0.75);
+  --color-text-primary: #F5F5F5;
+  --color-text-secondary: #A1A1AA;
+  --color-accent-primary: #7C3AED;
+  --color-accent-highlight: #C084FC;
+  --color-accent-secondary: #22D3EE;
+
+  --font-heading: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #09090B;
+  --foreground: #F5F5F5;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #09090B;
+  color: #F5F5F5;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  overflow-x: hidden;
+  selection-background-color: #7C3AED;
+  selection-color: #ffffff;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #09090B;
+}
+::-webkit-scrollbar-thumb {
+  background: #272732;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7C3AED;
+}
+
+/* Cyberpunk decorative elements */
+.cyber-glow-primary {
+  box-shadow: 0 0 25px -5px rgba(124, 58, 237, 0.45);
+}
+
+.cyber-glow-cyan {
+  box-shadow: 0 0 20px -5px rgba(34, 211, 238, 0.4);
+}
+
+.cyber-border-gradient {
+  position: relative;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.3) 0%, rgba(34, 211, 238, 0.15) 100%);
+  padding: 1px;
+}
+
+.cyber-badge {
+  font-family: var(--font-space-grotesk), monospace;
+  letter-spacing: 0.05em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.text-heading {
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+/* Hide scrollbar for carousel while preserving smooth scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
