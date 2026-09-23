@@ -27,7 +27,7 @@ export default function TrendingSection({ animeList }: TrendingSectionProps) {
 
   return (
     <section
-      className="relative my-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto group/trending"
+      className="relative my-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto group/trending w-full overflow-hidden"
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => setShowControls(false)}
     >
@@ -43,13 +43,13 @@ export default function TrendingSection({ animeList }: TrendingSectionProps) {
 
         <Link
           href="/rankings?filter=bypopularity"
-          className="text-xs font-semibold text-[#8B5CF6] hover:text-[#A855F7] transition"
+          className="text-xs font-semibold text-[#8B5CF6] hover:text-[#A855F7] transition shrink-0 ml-2"
         >
           View Full Chart →
         </Link>
       </div>
 
-      <div className="relative">
+      <div className="relative w-full">
         {/* Left Arrow */}
         <button
           onClick={() => scroll("left")}
@@ -64,7 +64,7 @@ export default function TrendingSection({ animeList }: TrendingSectionProps) {
         {/* Top 10 Track */}
         <div
           ref={scrollRef}
-          className="flex gap-6 sm:gap-8 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-2"
+          className="flex gap-4 sm:gap-8 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-2 w-full overscroll-x-contain touch-pan-x"
         >
           {top10.map((anime, index) => {
             const rankFormatted = String(index + 1).padStart(2, "0");

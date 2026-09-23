@@ -20,7 +20,7 @@ export default function GenreFilter({
   if (!genres || genres.length === 0) return null;
 
   return (
-    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-2">
+    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 w-full max-w-full overscroll-x-contain touch-pan-x">
       {onSelectGenre ? (
         <button
           onClick={() => onSelectGenre(0)}

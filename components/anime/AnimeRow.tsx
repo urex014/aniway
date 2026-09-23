@@ -31,7 +31,7 @@ export default function AnimeRow({
 
   return (
     <section
-      className="relative my-7 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto group/row"
+      className="relative my-7 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto group/row w-full overflow-hidden"
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => setShowControls(false)}
     >
@@ -44,7 +44,7 @@ export default function AnimeRow({
         {viewAllHref && (
           <Link
             href={viewAllHref}
-            className="text-xs font-semibold text-[#8B5CF6] hover:text-[#A855F7] transition"
+            className="text-xs font-semibold text-[#8B5CF6] hover:text-[#A855F7] transition shrink-0 ml-2"
           >
             Explore All →
           </Link>
@@ -52,7 +52,7 @@ export default function AnimeRow({
       </div>
 
       {/* Row Wrapper with Floating Netflix Chevron Controls */}
-      <div className="relative">
+      <div className="relative w-full">
         {/* Left Scroll Button */}
         <button
           onClick={() => scroll("left")}
@@ -67,7 +67,7 @@ export default function AnimeRow({
         {/* Horizontal Card Track */}
         <div
           ref={scrollRef}
-          className="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-1"
+          className="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-1 w-full overscroll-x-contain touch-pan-x"
         >
           {animeList.map((anime, index) => (
             <div

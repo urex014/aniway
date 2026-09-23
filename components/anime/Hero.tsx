@@ -115,30 +115,30 @@ export default function Hero({ featuredAnime }: HeroProps) {
           )}
 
           {/* Netflix Style Buttons */}
-          <div className="flex items-center gap-3 pt-3">
+          <div className="flex items-center gap-2.5 sm:gap-3 pt-3 flex-wrap">
             <Link
               href={`/watch/${currentAnime.mal_id}?ep=1`}
-              className="flex items-center gap-2 px-7 py-3 rounded-md bg-[#8B5CF6] hover:bg-[#7C3AED] text-white font-semibold text-sm transition-all duration-200 shadow-md active:scale-95 cursor-pointer"
+              className="flex items-center gap-2 px-5 sm:px-7 py-2.5 sm:py-3 rounded-md bg-[#8B5CF6] hover:bg-[#7C3AED] text-white font-semibold text-xs sm:text-sm transition-all duration-200 shadow-md active:scale-95 cursor-pointer"
             >
-              <Play className="w-4 h-4 fill-white" />
+              <Play className="w-3.5 sm:w-4 h-3.5 sm:h-4 fill-white" />
               Watch Now
             </Link>
 
             <button
               onClick={handleWatchlist}
-              className="flex items-center gap-2 px-6 py-3 rounded-md bg-[#181818]/90 hover:bg-[#262626] border border-white/15 text-white font-medium text-sm transition-all duration-200 active:scale-95 cursor-pointer"
+              className="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-md bg-[#181818]/90 hover:bg-[#262626] border border-white/15 text-white font-medium text-xs sm:text-sm transition-all duration-200 active:scale-95 cursor-pointer"
             >
-              {inWatchlist ? <Check className="w-4 h-4 text-[#8B5CF6]" /> : <Plus className="w-4 h-4" />}
+              {inWatchlist ? <Check className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#8B5CF6]" /> : <Plus className="w-3.5 sm:w-4 h-3.5 sm:h-4" />}
               <span>{inWatchlist ? "In My List" : "My List"}</span>
             </button>
 
             <Link
               href={`/anime/${currentAnime.mal_id}`}
-              className="flex items-center gap-2 px-4 py-3 rounded-md bg-[#111111]/70 hover:bg-[#181818] border border-white/10 text-xs text-[#A3A3A3] hover:text-white transition"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-md bg-[#111111]/70 hover:bg-[#181818] border border-white/10 text-xs text-[#A3A3A3] hover:text-white transition"
               title="More Info"
             >
-              <Info className="w-4 h-4" />
-              More Info
+              <Info className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
+              <span className="hidden xs:inline sm:inline">More Info</span>
             </Link>
           </div>
         </div>

@@ -261,7 +261,7 @@ export default function AnimeDetails({ anime, initialEpisodes }: AnimeDetailsPro
             )}
 
             {/* Netflix-style Minimal Tabs */}
-            <div className="border-b border-white/10 mb-6 flex items-center gap-6 overflow-x-auto no-scrollbar">
+            <div className="border-b border-white/10 mb-6 flex items-center gap-6 overflow-x-auto no-scrollbar w-full max-w-full overscroll-x-contain touch-pan-x">
               {[
                 { id: "episodes", label: "Episodes", count: episodes.length },
                 { id: "characters", label: "Cast & Characters" },

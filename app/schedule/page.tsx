@@ -46,7 +46,7 @@ export default async function SchedulePage({ searchParams }: SchedulePageProps) 
       </div>
 
       {/* Day of Week Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-6">
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-6 w-full max-w-full overscroll-x-contain touch-pan-x">
         {days.map((d) => {
           const isActive = currentDay === d.value;
           return (

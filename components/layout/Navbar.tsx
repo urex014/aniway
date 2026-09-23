@@ -61,10 +61,10 @@ export default function Navbar() {
           : "bg-gradient-to-b from-[#050505]/90 via-[#050505]/40 to-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between gap-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between gap-3 sm:gap-6 w-full">
         {/* Left: Brand Logo & Navigation */}
-        <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2 group">
+        <div className="flex items-center gap-8 min-w-0">
+          <Link href="/" className="flex items-center gap-2 group shrink-0">
             <span className="font-extrabold text-2xl tracking-tighter text-white group-hover:text-white transition">
               ANI<span className="text-[#8B5CF6]">WAY</span>
             </span>
@@ -92,7 +92,7 @@ export default function Navbar() {
         </div>
 
         {/* Right: Search, My List Indicator, Profile */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2.5 sm:gap-4 shrink-0">
           {/* Expandable Search Input */}
           <div className="relative flex items-center">
             {searchOpen ? (
@@ -105,8 +105,8 @@ export default function Navbar() {
                   onBlur={() => {
                     if (!searchQuery) setSearchOpen(false);
                   }}
-                  placeholder="Titles, characters, genres..."
-                  className="w-48 sm:w-64 bg-[#111111] border border-white/20 rounded-md pl-8 pr-3 py-1.5 text-xs text-white placeholder-[#A3A3A3] outline-none focus:border-[#8B5CF6] transition-all"
+                  placeholder="Search titles..."
+                  className="w-36 xs:w-44 sm:w-64 bg-[#111111] border border-white/20 rounded-md pl-8 pr-3 py-1.5 text-xs text-white placeholder-[#A3A3A3] outline-none focus:border-[#8B5CF6] transition-all"
                 />
                 <Search className="w-3.5 h-3.5 text-[#A3A3A3] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </form>

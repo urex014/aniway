@@ -59,7 +59,7 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
         </div>
 
         {/* Tab Pills */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full max-w-full overscroll-x-contain touch-pan-x pb-1">
           {[
             { id: "anime", label: "Top Anime" },
             { id: "manga", label: "Top Manga" },
@@ -69,7 +69,7 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
             <Link
               key={t.id}
               href={`/rankings?tab=${t.id}`}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition shrink-0 ${
                 tab === t.id
                   ? "bg-[#8B5CF6] text-white"
                   : "bg-[#181818] hover:bg-[#262626] text-[#A3A3A3] hover:text-white"
@@ -83,7 +83,7 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
 
       {/* Subfilters */}
       {tab === "anime" && (
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-4 mb-4">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full max-w-full overscroll-x-contain touch-pan-x pb-4 mb-4">
           {animeFilters.map((f) => {
             const isActive = (filter || "") === f.value;
             return (

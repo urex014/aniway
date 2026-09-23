@@ -129,6 +129,7 @@ export async function resolveArchiveStream(
 
       const searchRes = await fetch(searchUrl, {
         headers: { "User-Agent": "AniwayStream/1.0" },
+        signal: AbortSignal.timeout(3500),
       });
       if (!searchRes.ok) continue;
 
@@ -176,6 +177,7 @@ async function resolveFromArchiveIdentifier(
   const metaUrl = `https://archive.org/metadata/${identifier}`;
   const res = await fetch(metaUrl, {
     headers: { "User-Agent": "AniwayStream/1.0" },
+    signal: AbortSignal.timeout(3500),
   });
   if (!res.ok) return null;
 

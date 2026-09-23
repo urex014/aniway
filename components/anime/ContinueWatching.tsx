@@ -26,14 +26,14 @@ export default function ContinueWatching() {
   if (items.length === 0) return null;
 
   return (
-    <section className="relative my-7 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section className="relative my-7 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full overflow-hidden">
       <div className="flex items-baseline justify-between mb-3">
         <h2 className="font-bold text-lg sm:text-xl text-white tracking-tight">
           Continue Watching for You
         </h2>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-1">
+      <div className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-1 w-full overscroll-x-contain touch-pan-x">
         {items.map((item) => {
           const percent =
             item.durationSeconds > 0
