@@ -2,6 +2,7 @@ import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { animeService } from "@/lib/api";
+import { resolveArchiveStream } from "@/lib/api/archiveStream";
 import VideoPlayer from "@/components/player/VideoPlayer";
 import EpisodeSelector from "@/components/player/EpisodeSelector";
 import { ChevronLeft } from "lucide-react";
@@ -48,6 +49,14 @@ export default async function WatchPage({ params, searchParams }: WatchPageProps
   const episodes = episodesRes.data || [];
   const trailerUrl = anime.trailer?.embed_url || (videosRes.data?.promo?.[0]?.trailer?.embed_url ?? null);
 
+  // Pre-resolve direct stream from Internet Archive
+  const initialStream = await resolveArchiveStream(
+    anime.mal_id,
+    anime.title,
+    currentEpisodeNum,
+    anime.title_english || undefined
+  );
+
   return (
     <div className="w-full min-h-screen bg-[#050505] pt-20 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -73,6 +82,7 @@ export default async function WatchPage({ params, searchParams }: WatchPageProps
               trailerUrl={trailerUrl}
               officialStreams={anime.streaming || []}
               externalLinks={externalRes.data || []}
+              initialStream={initialStream}
             />
 
             {/* Clean Metadata Line */}
