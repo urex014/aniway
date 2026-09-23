@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} dark`}>
       <body className="min-h-screen flex flex-col bg-[#050505] text-[#FFFFFF] antialiased selection:bg-[#8B5CF6] selection:text-white">
         <Navbar />
-        <main className="flex-1 pb-16 md:pb-12">{children}</main>
+        <main className="flex-1 pb-20 md:pb-12">{children}</main>
         <Footer />
         <MobileNav />
       </body>

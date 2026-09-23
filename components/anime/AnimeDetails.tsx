@@ -122,11 +122,11 @@ export default function AnimeDetails({ anime, initialEpisodes }: AnimeDetailsPro
       </div>
 
       {/* 2. Main Details Content Overlay */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full -mt-44 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full -mt-24 sm:-mt-44 relative z-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           {/* Left Column: Overlapping Poster & CTAs */}
-          <div className="md:col-span-4 lg:col-span-3 flex flex-col gap-4">
-            <div className="relative aspect-[2/3] w-full rounded-md overflow-hidden bg-[#111111] shadow-[0_12px_40px_rgba(0,0,0,0.9)]">
+          <div className="md:col-span-4 lg:col-span-3 flex flex-col gap-4 items-center md:items-stretch">
+            <div className="relative aspect-[2/3] w-44 sm:w-56 md:w-full max-w-[280px] rounded-md overflow-hidden bg-[#111111] shadow-[0_12px_40px_rgba(0,0,0,0.9)]">
               <Image
                 src={posterImg}
                 alt={displayTitle}

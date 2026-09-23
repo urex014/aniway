@@ -30,7 +30,7 @@ export default function MobileNav() {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#050505]/95 backdrop-blur-md border-t border-white/10 px-2 py-1 shadow-2xl">
+    <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#050505]/95 backdrop-blur-md border-t border-white/10 px-2 pt-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] shadow-2xl">
       <div className="flex items-center justify-around">
         {items.map((item) => {
           const isActive = pathname === item.href;
